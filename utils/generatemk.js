@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 function generateProjectUrl(github, title) {
     const kebabCaseTitle = title.toLowerCase().split(" ").join("-");
     return `https://github.com/${github}/${kebabCaseTitle}`;
@@ -50,8 +52,20 @@ To run tests, run the following command:
 ${data.test}
 \`\`\`
 ## Questions
-If you have any questions about the repo, open an issue or contact [${data.github}](${data.url}) directly at ${data.email}.
-;`
+If you have any questions about the repo, open an issue or contact [${data.github}] ${data.url} directly at ${data.email}.
+;
+##Users email id is 
+${runApi(data.github)}`
 }
+
+function runApi(github) {
+
+    const queryUrl = `https://api.github.com/users/${github}`;
+    axios.get(queryUrl).then(function (res) {
+        //const avatar = res.data.avatar_url;
+        const email=res.html_url;
+        return email;
+    });
+};
 
 module.exports = generateMarkdown;

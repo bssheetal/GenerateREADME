@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const inquirer = require("inquirer");
 const generate = require("./utils/generatemk");
-
-
+const axios = require("axios");
+var divider = "\n------------------------------------------------------------\n\n";
 const questions = [
     {
         type: "input",
@@ -17,7 +17,7 @@ const questions = [
     },
     {
         type: "input",
-        name: "URL to Project",
+        name: "url",
         message: "the URL to your project?"
     },
     {
@@ -69,8 +69,19 @@ function init() {
     inquirer.prompt(questions).then((inquirerresponse) => {
 
         writetofile("Readme.md", generate({ ...inquirerresponse }));
-
+        runApi(inquirerresponse.github);
     })
 }
+
+function runApi(github) {
+    var github="bssheetal";
+        const queryUrl = `https://api.github.com/users/${github}`;
+        axios.get(queryUrl).then(function (res) {
+            //const avatar = res.data.avatar_url;
+            var email=res.data.login;
+            fs.appendFileSync("Readme.md",divider+email);
+        });
+    };
+
 
 init();
